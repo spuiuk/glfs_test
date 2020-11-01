@@ -1,5 +1,8 @@
 /*
-        gcc -o test_glfs test_glfs.c -l gfapi
+ *      https://bugzilla.samba.org/show_bug.cgi?id=14486
+ *
+        gcc -o glfs_write-behind-test glfs_write-behind-test.cc -l gfapi
+
 
         We test with the following scenario.
         Two separate glusterfs connections are made to the server. We use one
