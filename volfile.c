@@ -10,6 +10,35 @@
 #include <sys/stat.h>
 #include <glusterfs/api/glfs.h>
 
+int check_volfile(glfs_t *fs)
+{
+        char *buf;
+        size_t buflen = 4096;
+        int ret;
+
+        do {
+                buf = malloc(buflen);
+                if (!buf) {
+                        fprintf(stderr, "Error allocating buffer\n");
+                        return -1;
+                }
+
+                ret = glfs_get_volfile(fs, buf, buflen);
+                if (ret == 0) {
+                        fprintf(stderr, "No volfile available\n");
+                } else if (ret < 0) {
+                        free(buf);
+                        buflen = buflen - ret;
+                }
+        } while(ret < 0);
+
+        if (ret > 0) {
+                printf("*%s*", buf);
+        }
+
+        return ret;
+}
+
 int main (int argc, char** argv)
 {
         char *hostname = NULL;
@@ -48,19 +77,7 @@ int main (int argc, char** argv)
         }
 
         fprintf(stderr, "attempting get_volfile\n");
-        buf = malloc(buflen);
-        ret = glfs_get_volfile(fs, buf, buflen);
-        if (ret<0) {
-                buflen = buflen - ret;
-                free(buf);
-                buf = malloc(buflen);
-                ret = glfs_get_volfile(fs, buf, buflen);
-        }
-
-        fprintf(stderr, "attempting get_volfile ret %d\n", ret);
-
-
-        printf("*%s*", buf);
+        check_volfile(fs);
 
 done:
         glfs_fini(fs);
