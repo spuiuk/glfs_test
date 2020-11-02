@@ -12,12 +12,15 @@
 #include <sys/stat.h>
 #include <glusterfs/api/glfs.h>
 
-int check_volfile(glfs_t *fs)
+int check_volfile(glfs_t *fs, char *volname)
 {
         char *buf;
         size_t buflen = 4096;
         int ret;
+        char wb_volume[2048];
+        char *ret_str;
 
+        snprintf(wb_volume, 2048, "\nvolume %s-write-behind\n", volname);
         do {
                 buf = malloc(buflen);
                 if (!buf) {
@@ -35,7 +38,12 @@ int check_volfile(glfs_t *fs)
         } while(ret < 0);
 
         if (ret > 0) {
-                printf("*%s*", buf);
+                ret_str = strstr(buf, wb_volume);
+                if (ret_str == NULL){
+                        ret = 0;
+                } else {
+                        ret = 1;
+                }
         }
         free(buf);
 
@@ -79,8 +87,11 @@ int main (int argc, char** argv)
                 return ret;
         }
 
-        fprintf(stderr, "attempting get_volfile\n");
-        check_volfile(fs);
+        if (check_volfile(fs, volname) > 0) {
+                printf("Write behind enabled\n");
+        } else {
+                printf("Write behind disabled\n");
+        }
 
 done:
         glfs_fini(fs);
