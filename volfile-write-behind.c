@@ -1,5 +1,7 @@
 /*
-        gcc -o volfile volfile.c -l gfapi
+        gcc -o volfile-write-behind volfile-write-behind.c -l gfapi
+
+        Check for write-behind translator enabled for volume
 
  */
 #include <stdio.h>
