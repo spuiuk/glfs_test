@@ -35,6 +35,7 @@ int check_volfile(glfs_t *fs)
         if (ret > 0) {
                 printf("*%s*", buf);
         }
+        free(buf);
 
         return ret;
 }
