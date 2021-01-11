@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 	}
 
 	/* Step 2 - setxattr a pattern to the file  expected 0 */
-	ret = glfs_setxattr(fs1, filename, "user.DOSATTRIB", buf, buf_size, 0);
+	ret = glfs_fsetxattr(fd, "user.DOSATTRIB", buf, buf_size, 0);
 	fprintf(stderr, "user.DOSATTRIB setxattr ret %d(0)\n", ret);
 
 	/* Step 3 - fsetxattr security.NTACL - expected 0 */
