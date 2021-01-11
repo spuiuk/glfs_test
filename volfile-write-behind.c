@@ -81,11 +81,13 @@ int main (int argc, char** argv)
                 goto done;
         }
 
+        /*
         ret = glfs_init(fs);
         if (ret < 0) {
                 fprintf(stderr, "glfs_init fs failed\n");
                 return ret;
         }
+        */
 
         if (check_volfile(fs, volname) > 0) {
                 printf("Write behind enabled\n");
